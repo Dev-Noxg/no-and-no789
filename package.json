@@ -3,7 +3,10 @@
   "version": "2.1.0",
   "type": "module",
   "main": "index.js",
-  "scripts": { "start": "node index.js" },
+  "scripts": {
+    "start": "node index.js",
+    "postinstall": "pip3 install -U yt-dlp --break-system-packages || true"
+  },
   "dependencies": {
     "@whiskeysockets/baileys": "6.7.22",
     "dotenv": "^16.4.5",

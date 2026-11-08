@@ -1,0 +1,6 @@
+# ملف جديد بالاسم: nixpacks.toml
+# حطه في جذر المشروع (جنب package.json و index.js)
+# بيقول لـ Railway يثبّت yt-dlp و ffmpeg تلقائيًا وقت البناء
+
+[phases.setup]
+nixPkgs = ["nodejs", "yt-dlp", "ffmpeg"]

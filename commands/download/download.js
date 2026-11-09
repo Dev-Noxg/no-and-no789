@@ -7,7 +7,11 @@ import { getBuffer, isUrl, money } from '../../lib/utils.js';
 
 const TMP = path.join(os.tmpdir(), 'no-and-no-bot');
 fs.mkdirSync(TMP, { recursive: true });
-const BIN = () => (fs.existsSync('./yt-dlp.exe') ? './yt-dlp.exe' : config.ytdlp);
+
+// تعديل ذكي: يتعرف تلقائياً على النظام (لو ويندوز يستخدم yt-dlp.exe، ولو سيرفر لينكس يستخدم yt-dlp العام)
+const isWindows = os.platform() === 'win32';
+const BIN = () => (isWindows && fs.existsSync('./yt-dlp.exe') ? './yt-dlp.exe' : 'yt-dlp');
+
 const MAX = 95 * 1024 * 1024;
 const COOKIES_PATH = path.join(process.cwd(), 'cookies.txt');
 // حيلة بدون أي حساب: يتظاهر إنه تطبيق يوتيوب على أندرويد عشان يتخطى فحص "مش بوت"
@@ -19,7 +23,7 @@ function ytdlp(args, timeout = 300000) {
   return new Promise((res, rej) => {
     execFile(BIN(), args, { timeout, maxBuffer: 50 * 1024 * 1024, windowsHide: true }, (err, out, errout) => {
       if (!err) return res(out);
-      if (err.code === 'ENOENT') return rej(new Error('yt-dlp مش موجود. نزّل yt-dlp.exe وحطه جوه مجلد البوت (اقرأ الشرح).'));
+      if (err.code === 'ENOENT') return rej(new Error('yt-dlp مش موجود. تأكد من توفره في النظام أو مجلد البوت.'));
       rej(new Error(String(errout || err.message).split('\n').filter(Boolean).slice(-1)[0]?.slice(0, 200)));
     });
   });

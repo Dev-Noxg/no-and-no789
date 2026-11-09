@@ -9,8 +9,13 @@ const TMP = path.join(os.tmpdir(), 'no-and-no-bot');
 fs.mkdirSync(TMP, { recursive: true });
 const BIN = () => (fs.existsSync('./yt-dlp.exe') ? './yt-dlp.exe' : config.ytdlp);
 const MAX = 95 * 1024 * 1024;
+const COOKIES_PATH = path.join(process.cwd(), 'cookies.txt');
+// حيلة بدون أي حساب: يتظاهر إنه تطبيق يوتيوب على أندرويد عشان يتخطى فحص "مش بوت"
+const EXTRA_ARGS = ['--extractor-args', 'youtube:player_client=android,web'];
+const withCookies = args => (fs.existsSync(COOKIES_PATH) ? ['--cookies', COOKIES_PATH, ...args] : args);
 
 function ytdlp(args, timeout = 300000) {
+  args = withCookies([...EXTRA_ARGS, ...args]);
   return new Promise((res, rej) => {
     execFile(BIN(), args, { timeout, maxBuffer: 50 * 1024 * 1024, windowsHide: true }, (err, out, errout) => {
       if (!err) return res(out);

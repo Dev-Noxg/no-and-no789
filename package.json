@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "postinstall": "pip3 install -U yt-dlp --break-system-packages || true"
+    "postinstall": "apt-get update && apt-get install -y ffmpeg python3 python3-pip && pip3 install -U yt-dlp --break-system-packages || true"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "6.7.22",
